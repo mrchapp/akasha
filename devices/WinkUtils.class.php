@@ -1,4 +1,5 @@
 <?php
+require_once("cree_light_bulb.class.php");
 require_once("ge_zigbee_light.class.php");
 
 class WinkUtils extends device
@@ -10,6 +11,11 @@ class WinkUtils extends device
 		$obj = null;
 		switch ($model_name)
 		{
+			case "Cree light bulb":
+				$obj = new cree_light_bulb();
+				$obj->set_id($id);
+				$obj->set_name($name);
+				break;
 			case "GE Light Bulb":
 				$obj = new ge_zigbee_light();
 				$obj->set_id($id);
