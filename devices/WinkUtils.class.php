@@ -1,6 +1,7 @@
 <?php
 require_once("cree_light_bulb.class.php");
 require_once("ge_jasco_binary.class.php");
+require_once("ge_jasco_dimmer.class.php");
 require_once("ge_zigbee_light.class.php");
 
 class WinkUtils extends device
@@ -19,6 +20,11 @@ class WinkUtils extends device
 				break;
 			case "Cree light bulb":
 				$obj = new cree_light_bulb();
+				$obj->set_id($id);
+				$obj->set_name($name);
+				break;
+			case "Dimmer":
+				$obj = new ge_jasco_dimmer();
 				$obj->set_id($id);
 				$obj->set_name($name);
 				break;
