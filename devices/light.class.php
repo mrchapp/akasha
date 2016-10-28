@@ -41,15 +41,20 @@ class light extends device
 	{
 		parent::__construct();
 
+		$this->commands["getstate"] = array(
+			"required" => array(),
+			"optional" => array()
+			);
+
 		$this->commands["poweron"] = array(
-						   "required" => array(),
-						   "optional" => array("intensity")
-					     );
+			"required" => array(),
+			"optional" => array("intensity")
+			);
 
 		$this->commands["poweroff"] = array(
-						    "required" => array(),
-						    "optional" => array("intensity")
-					      );
+			"required" => array(),
+			"optional" => array("intensity")
+			);
 	}
 
 	public function process_command($cmd, $args = null)
