@@ -1,0 +1,75 @@
+#!/usr/bin/env php
+<?php
+require_once("supported_devices.php");
+
+function help()
+{
+	echo "Usage: akasha.php device command [extra_arguments]" . PHP_EOL;
+	echo PHP_EOL;
+	echo "For example:" . PHP_EOL;
+	echo "  akasha garage poweron" . PHP_EOL;
+	echo PHP_EOL;
+}
+
+
+// read config
+require_once("config.php");
+
+
+// vvvvv parse args vvvvv
+// TODO: Rewrite all this
+$args = null;
+$argv_size = count($argv);
+
+if ($argv_size < 2)
+{
+	help();
+	exit(0);
+}
+
+$recipient_device = $argv[1];
+
+// Do we have a command for the given device?
+if ($argv_size > 2)
+{
+	$command = $argv[2];
+
+	// Are there extra arguments for the command?
+	if ($argv_size > 3)
+	{
+		for ($i = 3; $i < $argv_size; $i++)
+		{
+			$t_arg = $argv[$i];
+			$t_arr = explode("=", $t_arg);
+			if (count($t_arr) > 1)
+				$args[$t_arr[0]] = $t_arr[1];
+			else
+				$args[$t_arr[0]] = null;
+		}
+	}
+} else
+{
+	// If no command was specified, default to listcommands
+	$command = "listcommands";
+}
+/// ^^^^^ parse args ^^^^^
+
+
+$found_device = null;
+foreach ($wink_devices as $dev)
+{
+	if ($dev != null && $dev->get_name() == $recipient_device)
+	{
+		$found_device = $dev;
+		break;
+	}
+}
+
+if ($found_device)
+{
+	$cmd = $found_device->process_command($command, $args);
+} else {
+	echo "ERROR: Device not found: $recipient_device" . PHP_EOL;
+}
+
+?>
