@@ -27,7 +27,26 @@ if ($argv_size < 2)
 	exit(0);
 }
 
-$recipient_device = $argv[1];
+$arg_token = $argv[1];
+switch ($arg_token)
+{
+	case "help":
+		help();
+		exit(0);
+		break;
+	case "listdevices":
+		echo "Available devices:" . PHP_EOL;
+		foreach ($wink_devices as $dev)
+		{
+			if ($dev != null)
+			{
+				echo "  " . $dev->get_name() . PHP_EOL;
+			}
+		}
+		exit(0);
+		break;
+}
+$recipient_device = $arg_token;
 
 // Do we have a command for the given device?
 if ($argv_size > 2)
