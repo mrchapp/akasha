@@ -1,7 +1,7 @@
 <?php
-require_once("wink_light.class.php");
+require_once("light.class.php");
 
-class cree_light_bulb extends wink_light
+class cree_light_bulb extends light
 {
 	function __construct()
 	{

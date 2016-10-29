@@ -1,7 +1,7 @@
 <?php
-require_once("wink_light.class.php");
+require_once("light.class.php");
 
-class ge_zigbee_light extends wink_light
+class ge_zigbee_light extends light
 {
 	function __construct()
 	{
