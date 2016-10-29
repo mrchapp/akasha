@@ -1,7 +1,7 @@
 <?php
-require_once("wink_lock.class.php");
+require_once("lock.class.php");
 
-class schlage_zwave_lock extends wink_lock
+class schlage_zwave_lock extends lock
 {
 	function __construct()
 	{

@@ -1,11 +1,8 @@
 <?php
-require_once("device.class.php");
+require_once("wink_device.class.php");
 
-class dimmer extends device
+class dimmer extends wink_device
 {
-	protected $wink_type;
-	protected $wink_idfield;
-
 	public function __construct()
 	{
 		parent::__construct();
@@ -24,26 +21,6 @@ class dimmer extends device
 			"required" => array(),
 			"optional" => array("intensity")
 			);
-	}
-
-	public function get_wink_type()
-	{
-		return $this->wink_type;
-	}
-
-	public function set_wink_type($arg)
-	{
-		$this->wink_type = $arg;
-	}
-
-	public function get_wink_idfield()
-	{
-		return $this->wink_idfield;
-	}
-
-	public function set_wink_idfield($arg)
-	{
-		$this->wink_idfield = $arg;
 	}
 
 	public function process_command($cmd, $args = null)
