@@ -11,6 +11,26 @@ class wink_light extends light
 		parent::__construct();
 	}
 
+	public function get_wink_type()
+	{
+		return $this->wink_type;
+	}
+
+	public function set_wink_type($arg)
+	{
+		$this->wink_type = $arg;
+	}
+
+	public function get_wink_idfield()
+	{
+		return $this->wink_idfield;
+	}
+
+	public function set_wink_idfield($arg)
+	{
+		$this->wink_idfield = $arg;
+	}
+
 	public function process_command($cmd, $args = null)
 	{
 		if (!parent::process_command($cmd, $args))

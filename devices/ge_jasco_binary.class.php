@@ -3,9 +3,6 @@ require_once("binary_switch.class.php");
 
 class ge_jasco_binary extends binary_switch
 {
-	protected $wink_type;
-	protected $wink_idfield;
-
 	function __construct()
 	{
 		parent::__construct();
