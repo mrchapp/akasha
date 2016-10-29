@@ -3,6 +3,7 @@ require_once("cree_light_bulb.class.php");
 require_once("ge_jasco_binary.class.php");
 require_once("ge_jasco_dimmer.class.php");
 require_once("ge_zigbee_light.class.php");
+require_once("schlage_zwave_lock.class.php");
 
 class WinkUtils extends device
 {
@@ -13,6 +14,11 @@ class WinkUtils extends device
 		$obj = null;
 		switch ($model_name)
 		{
+			case "BE469":
+				$obj = new schlage_zwave_lock();
+				$obj->set_id($id);
+				$obj->set_name($name);
+				break;
 			case "Binary Switch":
 				$obj = new ge_jasco_binary();
 				$obj->set_id($id);
