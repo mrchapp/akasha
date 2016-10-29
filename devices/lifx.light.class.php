@@ -99,15 +99,14 @@ class lifx_light extends lifx_device
                                         echo $ret . " Not connected" . PHP_EOL;
                                         return false;
                                 }
-
 				$powered = $json['0']['power'];
 				$intensity = sprintf("%.02f", $json['0']['brightness']);
 				switch ($powered)
 				{
-					case 1:
+					case "on":
 						$state = "ON";
 						break;
-					case 0:
+					case "off":
 						$state = "OFF";
 						break;
 					default:
