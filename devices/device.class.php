@@ -5,6 +5,7 @@ class device
 	protected $name;
 	protected $id;
 	protected $commands;
+	protected $device_type;
 
 	public function get_name()
 	{
@@ -26,14 +27,24 @@ class device
 		$this->id = $arg;
 	}
 
+	public function get_device_type()
+	{
+		return $this->device_type;
+	}
+
+	public function set_device_type($arg)
+	{
+		$this->device_type = $arg;
+	}
+
 	public function __construct()
 	{
+		$this->device_type = "<device>";
 		$this->commands = array();
 		$this->commands["listcommands"] = array(
 						   "required" => array(),
 						   "optional" => array()
 					     );
-
 	}
 
 	public static function listcommands($commands)

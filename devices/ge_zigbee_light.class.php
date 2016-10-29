@@ -10,6 +10,7 @@ class ge_zigbee_light extends wink_light
 		$this->set_spectrum_type("white");
 		$this->wink_type = "light_bulb";
 		$this->wink_idfield = "light_bulb_id";
+		$this->device_type = "GE Light Bulb";
 	}
 }
 

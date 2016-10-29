@@ -9,6 +9,7 @@ class ge_jasco_dimmer extends dimmer
 
 		$this->wink_type = "dimmer";
 		$this->wink_idfield = "dimmer_id";
+		$this->device_type = "Dimmer";
 	}
 }
 
