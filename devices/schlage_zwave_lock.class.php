@@ -7,7 +7,6 @@ class schlage_zwave_lock extends wink_lock
 	{
 		parent::__construct();
 
-		$this->set_icon("schlage_zwave_lock");
 		$this->wink_type = "lock";
 		$this->wink_idfield = "lock_id";
 	}

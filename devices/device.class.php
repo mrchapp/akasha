@@ -3,7 +3,6 @@
 class device
 {
 	protected $name;
-	protected $icon;
 	protected $id;
 	protected $commands;
 
@@ -15,16 +14,6 @@ class device
 	public function set_name($arg)
 	{
 		$this->name = $arg;
-	}
-
-	public function get_icon()
-	{
-		return $this->icon;
-	}
-
-	public function set_icon($arg)
-	{
-		$this->icon = $arg;
 	}
 
 	public function get_id()
