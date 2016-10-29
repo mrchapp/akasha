@@ -1,0 +1,17 @@
+----------------------
+Description
+----------------------
+PHP command line application to control Wink and other devices for Home Automation
+
+----------------------
+Prerequisites
+----------------------
+PHP 5 or later
+config.php (please contact developer for autoconf option)
+
+----------------------
+Command Line Arguments
+----------------------
+
+Example:  ./akasha [device] [command] [optional-parameter]
+
