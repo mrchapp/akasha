@@ -40,7 +40,7 @@ switch ($arg_token)
 		{
 			if ($dev != null)
 			{
-				echo "  " . $dev->get_name() . PHP_EOL;
+				echo "  " . $dev->get_name() . " (" . $dev->get_device_type() . ")" . PHP_EOL;
 			}
 		}
 		exit(0);
