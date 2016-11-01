@@ -1,5 +1,6 @@
 <?php
 require_once("lifx_device.class.php");
+require_once("color.class.php");
 
 class lifx_light extends lifx_device
 {
@@ -48,7 +49,7 @@ class lifx_light extends lifx_device
 
 		$this->commands["poweron"] = array(
 			"required" => array(),
-			"optional" => array("intensity")
+			"optional" => array("intensity", "color")
 			);
 
 		$this->commands["poweroff"] = array(
@@ -70,9 +71,21 @@ class lifx_light extends lifx_device
 				{
 					$intensity = $args["intensity"];
 				}
+				if ($args && array_key_exists("color", $args))
+				{
+					$colorParam = $args["color"];
+					$colorObj = new Color();
+					$colorObj->setColor($colorParam);
+					$color=$colorObj->getLifxColorString();
+				} else
+				{
+					$colorObj = new Color();
+					$colorObj->setColor("white");
+					$color=$colorObj->getLifxColorString();
+				}
 				$data = array("power" => "on",
 					      "brightness" => $intensity,
-					      "color"=>"white"
+					      "color" => $color
 				);
 				$endpoint = "/lights/" . $this->id ."/state";
 				$json_data = json_encode($data);
