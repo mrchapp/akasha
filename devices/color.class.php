@@ -242,6 +242,14 @@ class Color
 		return $LifxColorString;
 	}
 
+	public function getWinkColorString()
+	{
+		$WinkColorString  = str_pad(dechex($this->red),   2, "0", STR_PAD_LEFT);
+		$WinkColorString .= str_pad(dechex($this->green), 2, "0", STR_PAD_LEFT);
+		$WinkColorString .= str_pad(dechex($this->blue),  2, "0", STR_PAD_LEFT);
+		return $WinkColorString;
+	}
+
 	public function setRGB($r, $g, $b)
 	{
 		if (is_int($r) && is_int($g) && is_int($b))

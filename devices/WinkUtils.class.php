@@ -4,6 +4,8 @@ require_once("ge_jasco_binary.class.php");
 require_once("ge_jasco_dimmer.class.php");
 require_once("ge_zigbee_light.class.php");
 require_once("schlage_zwave_lock.class.php");
+require_once("sylvania_sylvania_rgbw.class.php");
+require_once("sylvania_sylvania_rgbw_flex.class.php");
 
 class WinkUtils extends device
 {
@@ -36,6 +38,16 @@ class WinkUtils extends device
 				break;
 			case "GE Light Bulb":
 				$obj = new ge_zigbee_light();
+				$obj->set_id($id);
+				$obj->set_name($name);
+				break;
+			case "Lightify RGBW Bulb":
+				$obj = new sylvania_sylvania_rgbw();
+				$obj->set_id($id);
+				$obj->set_name($name);
+				break;
+			case "Lightify RGBW Flex":
+				$obj = new sylvania_sylvania_rgbw_flex();
 				$obj->set_id($id);
 				$obj->set_name($name);
 				break;

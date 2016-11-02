@@ -1,5 +1,6 @@
 <?php
 require_once("wink_device.class.php");
+require_once("color.class.php");
 
 class light extends wink_device
 {
@@ -70,6 +71,43 @@ class light extends wink_device
 				{
 					$intensity = $args["intensity"];
 				}
+
+				if ($this->spectrum_type == "color")
+				{
+					if ($args && array_key_exists("color", $args))
+					{
+						// If color param is set, currently, 2 requests
+						// are needed to the Wink API.
+						$colorParam = $args["color"];
+						$colorObj = new Color();
+						$colorObj->setColor($colorParam);
+						$color=$colorObj->getHSB();
+						$colorData = array("desired_state" => array(
+							"color_model" => "hsb",
+							"hue" => $color["hue"],
+							"saturation" => $color["saturation"],
+							"brightness" => $color["brightness"])
+						);
+						$endpoint = "/light_bulbs/" . $this->id;
+						$json_data = json_encode($colorData);
+						WinkUtils::api_put($endpoint, $json_data);
+					}
+
+					$colorParam = "white";
+					$colorObj = new Color();
+					$colorObj->setColor($colorParam);
+					$color=$colorObj->getHSB();
+					$colorData = array("desired_state" => array(
+						"color_model" => "hsb",
+						"hue" => $color["hue"],
+						"saturation" => $color["saturation"],
+						"brightness" => $color["brightness"])
+					);
+					$endpoint = "/light_bulbs/" . $this->id;
+					$json_data = json_encode($colorData);
+					WinkUtils::api_put($endpoint, $json_data);
+				}
+
 				$data = array("desired_state" => array(
 					"powered" => true,
 					"brightness" => $intensity)
