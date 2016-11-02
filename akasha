@@ -1,10 +1,9 @@
 #!/usr/bin/env php
 <?php
-require_once("supported_devices.php");
 
 function help()
 {
-	echo "Usage: akasha.php device command [extra_arguments]" . PHP_EOL;
+	echo "Usage: akasha device command [extra_arguments]" . PHP_EOL;
 	echo PHP_EOL;
 	echo "For example:" . PHP_EOL;
 	echo "  akasha garage poweron" . PHP_EOL;
@@ -12,9 +11,31 @@ function help()
 	echo PHP_EOL;
 }
 
-
 // read config
-require_once("config.php");
+$config_file = null;
+$config_dirs = array(__DIR__, "/etc/akasha");
+foreach ($config_dirs as $cdir)
+{
+	if (file_exists($cdir . "/config.php"))
+	{
+		$config_file = $cdir . "/config.php";
+		break;
+	}
+}
+
+
+if (!$config_file)
+{
+	echo "Could not find config file. Please configure Akasha." . PHP_EOL;
+	exit(1);
+}
+require_once($config_file);
+if (array_key_exists("basedir", $config))
+{
+	$akasha_dir = $config["basedir"];
+} else {
+	$akasha_dir = __DIR__;
+}
 
 
 // vvvvv parse args vvvvv
