@@ -1,6 +1,6 @@
 <?php
-require_once("wink_device.class.php");
-require_once("color.class.php");
+require_once("classes/wink_device.class.php");
+require_once("classes/color.class.php");
 
 class light extends wink_device
 {

@@ -1,5 +1,5 @@
 <?php
-require_once("lifx.light.class.php");
+require_once("classes/lifx.light.class.php");
 
 class lifx_original_a21 extends lifx_light
 {

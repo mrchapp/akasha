@@ -1,5 +1,5 @@
 <?php
-require_once("light.class.php");
+require_once("classes/light.class.php");
 
 class cree_light_bulb extends light
 {

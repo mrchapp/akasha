@@ -1,6 +1,6 @@
 <?php
-require_once("lifx_device.class.php");
-require_once("color.class.php");
+require_once("classes/lifx_device.class.php");
+require_once("classes/color.class.php");
 
 class lifx_light extends lifx_device
 {

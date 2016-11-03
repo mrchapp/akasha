@@ -1,5 +1,5 @@
 <?php
-require_once("light.class.php");
+require_once("classes/light.class.php");
 
 class ge_zigbee_light extends light
 {

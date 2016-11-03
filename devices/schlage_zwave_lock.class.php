@@ -1,5 +1,5 @@
 <?php
-require_once("lock.class.php");
+require_once("classes/lock.class.php");
 
 class schlage_zwave_lock extends lock
 {

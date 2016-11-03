@@ -1,5 +1,5 @@
 <?php
-require_once("device.class.php");
+require_once("classes/device.class.php");
 
 class lifx_device extends device
 {

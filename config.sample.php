@@ -1,5 +1,5 @@
 <?php
-require_once("devices/Wink.class.php");
+require_once("classes/WinkUtils.class.php");
 
 $config = array();
 $wink_devices = array();

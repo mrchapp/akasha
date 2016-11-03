@@ -1,11 +1,11 @@
 <?php
-require_once("cree_light_bulb.class.php");
-require_once("ge_jasco_binary.class.php");
-require_once("ge_jasco_dimmer.class.php");
-require_once("ge_zigbee_light.class.php");
-require_once("schlage_zwave_lock.class.php");
-require_once("sylvania_sylvania_rgbw.class.php");
-require_once("sylvania_sylvania_rgbw_flex.class.php");
+require_once("devices/cree_light_bulb.class.php");
+require_once("devices/ge_jasco_binary.class.php");
+require_once("devices/ge_jasco_dimmer.class.php");
+require_once("devices/ge_zigbee_light.class.php");
+require_once("devices/schlage_zwave_lock.class.php");
+require_once("devices/sylvania_sylvania_rgbw.class.php");
+require_once("devices/sylvania_sylvania_rgbw_flex.class.php");
 
 class WinkUtils extends device
 {

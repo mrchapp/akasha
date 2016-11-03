@@ -1,19 +1,10 @@
 <?php
-require_once("wink_device.class.php");
+require_once("classes/wink_device.class.php");
+require_once("classes/WinkUtils.class.php");
 
-class lock extends wink_device
+class binary_switch extends wink_device
 {
-	protected $status_locked;
-
-	public function get_locked_status()
-	{
-		return $this->status_locked;
-	}
-
-	public function set_locked_status($state)
-	{
-		$this->status_locked = $state;
-	}
+	protected $status_powered;
 
 	public function __construct()
 	{
@@ -24,16 +15,25 @@ class lock extends wink_device
 			"optional" => array()
 			);
 
-		$this->commands["lock"] = array(
+		$this->commands["poweron"] = array(
 			"required" => array(),
 			"optional" => array()
 			);
 
-		$this->commands["unlock"] = array(
+		$this->commands["poweroff"] = array(
 			"required" => array(),
 			"optional" => array()
 			);
+	}
 
+	public function get_powered()
+	{
+		return $this->status_powered;
+	}
+
+	public function set_powered($arg)
+	{
+		$this->status_powered = $arg;
 	}
 
 	public function process_command($cmd, $args = null)
@@ -43,32 +43,32 @@ class lock extends wink_device
 
 		switch ($cmd)
 		{
-			case "unlock":
+			case "poweron":
 				$data = array("desired_state" => array(
-					"locked" => "false")
+					"powered" => true)
 				);
 
-				$endpoint = "/locks/" . $this->id;
+				$endpoint = "/binary_switches/" . $this->id;
 				$json_data = json_encode($data);
 
 				return WinkUtils::api_put($endpoint, $json_data);
 				break;
 
-			case "lock":
+			case "poweroff":
 				$data = array("desired_state" => array(
-					"locked" => "true")
+					"powered" => false)
 				);
 
-				$endpoint = "/locks/" . $this->id;
+				$endpoint = "/binary_switches/" . $this->id;
 				$json_data = json_encode($data);
 
 				return WinkUtils::api_put($endpoint, $json_data);
 				break;
-
 			case "getstate":
-				$endpoint = "/locks/" . $this->id;
+				$endpoint = "/binary_switches/" . $this->id;
 				$response = WinkUtils::api_get($endpoint);
 				$json = json_decode($response, true);
+
 				$ret = "ERR";
 				$connected = $json['data']['last_reading']['connection'];
 				if (!$connected)
@@ -76,22 +76,20 @@ class lock extends wink_device
 					echo $ret . " Not connected" . PHP_EOL;
 					return false;
 				}
-
-				$locked = $json['data']['last_reading']['locked'];
-
-				switch ($locked)
+				$powered = $json['data']['last_reading']['powered'];
+				switch ($powered)
 				{
-					case 1:
-						$ret = "LOCKED";
+					case true:
+						$state = "ON";
 						break;
-					case 0:
-						$ret = "UNLOCKED";
+					case false:
+						$state = "OFF";
 						break;
 					default:
 						return false;
 						break;
 				}
-				echo $ret . PHP_EOL;
+				echo $state . PHP_EOL;
 				break;
 			default:
 				break;

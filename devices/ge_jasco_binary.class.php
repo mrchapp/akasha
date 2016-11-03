@@ -1,5 +1,5 @@
 <?php
-require_once("binary_switch.class.php");
+require_once("classes/binary_switch.class.php");
 
 class ge_jasco_binary extends binary_switch
 {

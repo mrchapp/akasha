@@ -1,5 +1,5 @@
 <?php
-require_once("lifx_original_a21_light.class.php");
+require_once("devices/lifx_original_a21_light.class.php");
 
 class LifxUtils extends device
 {

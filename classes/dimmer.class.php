@@ -1,5 +1,5 @@
 <?php
-require_once("wink_device.class.php");
+require_once("classes/wink_device.class.php");
 
 class dimmer extends wink_device
 {

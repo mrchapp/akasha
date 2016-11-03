@@ -1,5 +1,5 @@
 <?php
-require_once("dimmer.class.php");
+require_once("classes/dimmer.class.php");
 
 class ge_jasco_dimmer extends dimmer
 {
