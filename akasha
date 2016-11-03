@@ -104,8 +104,13 @@ foreach ($lifx_devices as $dev)
 if ($found_device)
 {
 	$cmd = $found_device->process_command($command, $args);
+	if ($cmd === false)
+	{
+		exit(1);
+	}
 } else {
 	echo "ERROR: Device not found: $recipient_device" . PHP_EOL;
+	exit(1);
 }
 
 ?>
