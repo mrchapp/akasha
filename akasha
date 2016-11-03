@@ -11,31 +11,12 @@ function help()
 	echo PHP_EOL;
 }
 
+
 // read config
-$config_file = null;
-$config_dirs = array(__DIR__, "/etc/akasha");
-foreach ($config_dirs as $cdir)
-{
-	if (file_exists($cdir . "/config.php"))
-	{
-		$config_file = $cdir . "/config.php";
-		break;
-	}
-}
+$include_dirs = array(get_include_path(), __DIR__, "/etc/akasha", "/usr/lib/akasha");
+set_include_path(implode(PATH_SEPARATOR, $include_dirs));
 
-
-if (!$config_file)
-{
-	echo "Could not find config file. Please configure Akasha." . PHP_EOL;
-	exit(1);
-}
-require_once($config_file);
-if (array_key_exists("basedir", $config))
-{
-	$akasha_dir = $config["basedir"];
-} else {
-	$akasha_dir = __DIR__;
-}
+(@include_once("config.php")) or die("Could not find config file. Please configure Akasha." . PHP_EOL);
 
 
 // vvvvv parse args vvvvv
