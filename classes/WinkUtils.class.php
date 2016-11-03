@@ -7,6 +7,8 @@ require_once("devices/schlage_zwave_lock.class.php");
 require_once("devices/sylvania_sylvania_rgbw.class.php");
 require_once("devices/sylvania_sylvania_rgbw_flex.class.php");
 require_once("devices/generic_zwave_light_bulb_scene_switch_multilevel.class.php");
+require_once("devices/linear_wadwaz_1.class.php");
+require_once("devices/linear_wapirz_1.class.php");
 
 class WinkUtils extends device
 {
@@ -54,6 +56,16 @@ class WinkUtils extends device
 				break;
 			case "Light Bulb":
 				$obj = new generic_zwave_light_bulb_scene_switch_multilevel();
+				$obj->set_id($id);
+				$obj->set_name($name);
+				break;
+			case "Z-Wave Door / Window Transmitter":
+				$obj = new linear_wadwaz_1();
+				$obj->set_id($id);
+				$obj->set_name($name);
+				break;
+			case "Z-Wave Passive Infrared (PIR) Sensor":
+				$obj = new linear_wapirz_1();
 				$obj->set_id($id);
 				$obj->set_name($name);
 				break;
