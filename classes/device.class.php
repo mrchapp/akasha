@@ -43,8 +43,7 @@ class device
 		$this->commands = array();
 		$this->commands["listcommands"] = array(
 						   "required" => array(),
-						   "optional" => array()
-					     );
+						   "optional" => array());
 	}
 
 	public static function listcommands($commands)

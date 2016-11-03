@@ -105,13 +105,13 @@ class lifx_light extends lifx_device
 				$response = LifxUtils::api_get($endpoint);
 				$json = json_decode($response, true);
 
-                                $ret = "ERR";
-                                $connected = $json['0']['connected'];
-                                if (!$connected)
-                                {
-                                        echo $ret . " Not connected" . PHP_EOL;
-                                        return false;
-                                }
+				$ret = "ERR";
+				$connected = $json['0']['connected'];
+				if (!$connected)
+				{
+					echo $ret . " Not connected" . PHP_EOL;
+					return false;
+				}
 				$powered = $json['0']['power'];
 				$intensity = sprintf("%.02f", $json['0']['brightness']);
 				switch ($powered)

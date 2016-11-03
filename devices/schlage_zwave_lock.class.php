@@ -9,7 +9,7 @@ class schlage_zwave_lock extends lock
 
 		$this->wink_type = "lock";
 		$this->wink_idfield = "lock_id";
-                $this->device_type = "BE469";
+		$this->device_type = "BE469";
 	}
 }
 
