@@ -77,8 +77,7 @@ class lifx_light extends lifx_device
 					$colorObj = new Color();
 					$colorObj->setColor($colorParam);
 					$color=$colorObj->getLifxColorString();
-				} else
-				{
+				} else {
 					$colorObj = new Color();
 					$colorObj->setColor("white");
 					$color=$colorObj->getLifxColorString();

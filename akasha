@@ -71,13 +71,14 @@ if ($argv_size > 2)
 			$t_arg = $argv[$i];
 			$t_arr = explode("=", $t_arg);
 			if (count($t_arr) > 1)
+			{
 				$args[$t_arr[0]] = $t_arr[1];
-			else
+			} else {
 				$args[$t_arr[0]] = null;
+			}
 		}
 	}
-} else
-{
+} else {
 	// If no command was specified, default to listcommands
 	$command = "listcommands";
 }
