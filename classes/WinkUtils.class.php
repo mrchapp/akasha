@@ -6,6 +6,7 @@ require_once("devices/ge_zigbee_light.class.php");
 require_once("devices/schlage_zwave_lock.class.php");
 require_once("devices/sylvania_sylvania_rgbw.class.php");
 require_once("devices/sylvania_sylvania_rgbw_flex.class.php");
+require_once("devices/generic_zwave_light_bulb_scene_switch_multilevel.class.php");
 
 class WinkUtils extends device
 {
@@ -48,6 +49,11 @@ class WinkUtils extends device
 				break;
 			case "Lightify RGBW Flex":
 				$obj = new sylvania_sylvania_rgbw_flex();
+				$obj->set_id($id);
+				$obj->set_name($name);
+				break;
+			case "Light Bulb":
+				$obj = new generic_zwave_light_bulb_scene_switch_multilevel();
 				$obj->set_id($id);
 				$obj->set_name($name);
 				break;
