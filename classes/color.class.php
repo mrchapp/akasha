@@ -193,6 +193,10 @@ class Color
 							     $this->colors[$color]["green"],
 							     $this->colors[$color]["blue"]);
 				}
+				else
+				{
+					return false;
+				}
 			} else {
 				// Option b)
 				return $this->setRGB((int)$color[0],
@@ -309,53 +313,56 @@ class Color
 				 "saturation" => 0.0,
 				 "brightness" => 0.0);
 
-		// $cmax = max($r, $g, $b);
-		$cmax = ($r > $g) ? $r : $g;
-		if ($b > $cmax)
-		{
-			$cmax = $b;
-		}
-
-		// $cmin = min($r, $g, $b);
-		$cmin = ($r < $g) ? $r : $g;
-		if ($b < $cmin)
-		{
-			$cmin = $b;
-		}
+		$cmax = max($r, $g, $b);
+		$cmin = min($r, $g, $b);
+		$delta = $cmax - $cmin;
 
 		$brightness = ((float) $cmax) / 255.0;
-
 		$saturation = 0;
 		$hue = 0;
+
 		if ($cmax != 0)
 		{
-			$saturation = ((float) ($cmax - $cmin)) / ((float) $cmax);
-
-			$redc = ((float) ($cmax - $r)) / ((float) ($cmax - $cmin));
-			$greenc = ((float) ($cmax - $g)) / ((float) ($cmax - $cmin));
-			$bluec = ((float) ($cmax - $b)) / ((float) ($cmax - $cmin));
-
-			// what is $r == $g == cmax?
-			if ($r == $cmax)
+			$saturation = ((float) ($delta)) / ((float) $cmax);
+			if ($saturation != 0)
 			{
-				$hue = $bluec - $greenc;
-			} else if ($g == $cmax)
-			{
-				$hue = 2.0 + $redc - $bluec;
-			} else {
-				$hue = 4.0 + $greenc - $redc;
-			}
-
-			$hue = $hue / 6.0;
-			if ($hue < 0)
-			{
-				$hue = $hue + 1.0;
+				if ($r == $cmax)
+				{
+					$hue = ((float)($g) - (float)($b)) / $delta;
+				}
+				else
+				{
+					if ($g == $cmax)
+					{
+						$hue = 2 + ((float)($b) - (float)($r)) / $delta;
+					}
+					else
+					{
+						if ($b == $cmax)
+						{
+							$hue = 4 + ((float)($r) - (float)($g)) / $delta;
+						}
+					}
+				}
 			}
 		}
+		else
+		{
+			$hue = -1;
+		}
+
+		$hue = $hue * 60;
+		if ($hue < 0)
+		{
+			$hue = ($hue + 360);
+		}
+
+		$hue = $hue / 360;
 
 		$hsbvals["hue"] = $hue;
 		$hsbvals["saturation"] = $saturation;
 		$hsbvals["brightness"] = $brightness;
+
 		return $hsbvals;
 	}
 
