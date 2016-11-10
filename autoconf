@@ -1,5 +1,6 @@
 #!/usr/bin/env php
 <?php
+require_once("classes/WinkUtils.class.php");
 
 // You can set your user here:
 //$user = 'user@example.com';
@@ -101,6 +102,7 @@ if ($fh = fopen("devices.json", "w"))
 	fclose($fh);
 }
 
+$config = "";
 foreach($json['data'] as $element)
 {
 	$model_name = @$element['model_name'];
@@ -116,70 +118,16 @@ foreach($json['data'] as $element)
 		continue;
 	}
 
-	switch ($model_name)
-	{
-		case "HUB":
-		case "Hub":
-			$type = "hub";
-			$idfield = $type . "_id";
-			break;
-		case "BE469":
-			$type = "lock";
-			$idfield = $type . "_id";
-			break;
-		case "Binary Switch":
-			$type = "binary_switch";
-			$idfield = $type . "_id";
-			break;
-		case "Connected Bulb Remote":
-			$type = "remote";
-			$idfield = $type . "_id";
-			break;
-		case "Cree light bulb":
-		case "Dimmer":
-		case "GE Light Bulb":
-		case "Light Bulb":
-		case "Lightify RGBW Bulb":
-		case "Lightify RGBW Flex":
-			$type = "light_bulb";
-			$idfield = $type . "_id";
-			break;
-		case "Egg Minder":
-			$type = "eggtray";
-			$idfield = $type . "_id";
-			break;
-		case "Nimbus":
-			$type = "cloud_clock";
-			$idfield = $type . "_id";
-			break;
-		case "Pivot Power Genius":
-			$type = "powerstrip";
-			$idfield = $type . "_id";
-			break;
-		case "Smoke + Carbon Monoxide Detector":
-			$type = "smoke_detector";
-			$idfield = $type . "_id";
-			break;
-		case "Wireless Siren & Strobe":
-			$type = "siren";
-			$idfield = $type . "_id";
-			break;
-		case "Z-Wave Door / Window Transmitter":
-			$type = "sensor_pod";
-			$idfield = $type . "_id";
-			break;
-		case "Z-Wave Passive Infrared (PIR) Sensor":
-			$type = "sensor_pod";
-			$idfield = $type . "_id";
-			break;
-		default:
-			$config .= "//Unknown device type \"$model_name\", named \"$name\"" . PHP_EOL;
-			break;
-	}
+	$tidf_arr = WinkUtils::get_info_from_model($model_name);
+	$type = $tidf_arr["type"];
+	$idfield = $tidf_arr["idfield"];
+
 	if (array_key_exists($idfield, $element))
 	{
 		$id = $element[$idfield];
 		$config .= '$wink_devices[] = WinkUtils::new_device("' . $model_name . '", ' . $id .', "' . $name . '");' . PHP_EOL;
+	} else {
+		$config .= "//Unknown device type \"$model_name\", named \"$name\"" . PHP_EOL;
 	}
 }
 

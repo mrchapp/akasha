@@ -77,6 +77,8 @@ class WinkUtils extends device
 
 	static function get_info_from_model($model_name)
 	{
+		$type = null;
+		$idfield = null;
 		switch ($model_name)
 		{
 			case "HUB":
