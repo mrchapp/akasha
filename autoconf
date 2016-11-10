@@ -1,0 +1,194 @@
+#!/usr/bin/env php
+<?php
+
+// You can set your user here:
+//$user = 'user@example.com';
+
+// From https://dasprids.de/blog/2008/08/22/getting-a-password-hidden-from-stdin-with-php-cli/
+function get_password($stars = false)
+{
+	// Get current style
+	$oldStyle = shell_exec('stty -g');
+
+	if ($stars === false)
+	{
+		shell_exec('stty -echo');
+		$password = rtrim(fgets(STDIN), "\n");
+	} else {
+		shell_exec('stty -icanon -echo min 1 time 0');
+
+		$password = '';
+		while (true)
+		{
+			$char = fgetc(STDIN);
+
+			if ($char === "\n")
+			{
+				echo PHP_EOL;
+				break;
+			} else if (ord($char) === 127) {
+				if (strlen($password) > 0)
+				{
+					fwrite(STDOUT, "\x08 \x08");
+					$password = substr($password, 0, -1);
+				}
+			} else {
+				fwrite(STDOUT, "*");
+				$password .= $char;
+			}
+		}
+	}
+
+	// Reset old style
+	shell_exec('stty ' . $oldStyle);
+
+	// Return the password
+	return $password;
+}
+
+
+
+if (!isset($user))
+{
+	echo "Enter Wink user (mail such as user@example.com): ";
+	$user = trim(fgets(STDIN));
+}
+
+echo "Enter Wink password for $user: ";
+$pass = get_password(true);
+
+
+$client_id = "quirky_wink_android_app";
+$client_secret = "e749124ad386a5a35c0ab554a4f2c045";
+
+// Get tokens
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://winkapi.quirky.com/oauth2/token");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+curl_setopt($ch, CURLOPT_HEADER, FALSE);
+curl_setopt($ch, CURLOPT_POST, TRUE);
+curl_setopt($ch, CURLOPT_POSTFIELDS, "{\n    \"client_id\": \"$client_id\",\n    \"client_secret\": \"$client_secret\",\n    \"username\": \"$user\",\n    \"password\": \"$pass\",\n    \"grant_type\": \"password\"\n}");
+curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
+$response = curl_exec($ch);
+curl_close($ch);
+$json = json_decode($response, true);
+
+$access_token = $json['data']['access_token'];
+$refresh_token = $json['data']['refresh_token'];
+
+$config  = '<?php' . PHP_EOL;
+$config .= 'require_once("devices/WinkUtils.class.php");' . PHP_EOL;
+$config .= PHP_EOL;
+$config .= '$config = array();' . PHP_EOL;
+$config .= '$config["wink"]["token_access"] =  "' . $access_token  . "\";" . PHP_EOL;
+$config .= '$config["wink"]["token_refresh"] = "' . $refresh_token . "\";" . PHP_EOL;
+$config .= PHP_EOL;
+$config .= '$wink_devices = array();' . PHP_EOL;
+
+// Get devices
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://winkapi.quirky.com/users/me/wink_devices");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+curl_setopt($ch, CURLOPT_HEADER, FALSE);
+curl_setopt($ch, CURLOPT_HTTPHEADER, array("Authorization: Bearer " . $access_token));
+$response = curl_exec($ch);
+curl_close($ch);
+$json = json_decode($response, true);
+
+if ($fh = fopen("devices.json", "w"))
+{
+	fprintf($fh, $response);
+	fclose($fh);
+}
+
+foreach($json['data'] as $element)
+{
+	$model_name = @$element['model_name'];
+	$name = @$element['name'];
+	$has_parent = array_key_exists('parent_object_id', $element);
+	$idfield = "";
+	$id = "";
+	$type = "";
+
+	if ($has_parent != "")
+	{
+		// What's it doing at this level??
+		continue;
+	}
+
+	switch ($model_name)
+	{
+		case "HUB":
+		case "Hub":
+			$type = "hub";
+			$idfield = $type . "_id";
+			break;
+		case "BE469":
+			$type = "lock";
+			$idfield = $type . "_id";
+			break;
+		case "Binary Switch":
+			$type = "binary_switch";
+			$idfield = $type . "_id";
+			break;
+		case "Connected Bulb Remote":
+			$type = "remote";
+			$idfield = $type . "_id";
+			break;
+		case "Cree light bulb":
+		case "Dimmer":
+		case "GE Light Bulb":
+		case "Light Bulb":
+		case "Lightify RGBW Bulb":
+		case "Lightify RGBW Flex":
+			$type = "light_bulb";
+			$idfield = $type . "_id";
+			break;
+		case "Egg Minder":
+			$type = "eggtray";
+			$idfield = $type . "_id";
+			break;
+		case "Nimbus":
+			$type = "cloud_clock";
+			$idfield = $type . "_id";
+			break;
+		case "Pivot Power Genius":
+			$type = "powerstrip";
+			$idfield = $type . "_id";
+			break;
+		case "Smoke + Carbon Monoxide Detector":
+			$type = "smoke_detector";
+			$idfield = $type . "_id";
+			break;
+		case "Wireless Siren & Strobe":
+			$type = "siren";
+			$idfield = $type . "_id";
+			break;
+		case "Z-Wave Door / Window Transmitter":
+			$type = "sensor_pod";
+			$idfield = $type . "_id";
+			break;
+		case "Z-Wave Passive Infrared (PIR) Sensor":
+			$type = "sensor_pod";
+			$idfield = $type . "_id";
+			break;
+		default:
+			$config .= "//Unknown device type \"$model_name\", named \"$name\"" . PHP_EOL;
+			break;
+	}
+	if (array_key_exists($idfield, $element))
+	{
+		$id = $element[$idfield];
+		$config .= '$wink_devices[] = WinkUtils::new_device("' . $model_name . '", ' . $id .', "' . $name . '");' . PHP_EOL;
+	}
+}
+
+$config .= '?>' . PHP_EOL;
+
+echo $config;
+if ($fh = fopen("config-new.php", "w"))
+{
+	fprintf($fh, $config);
+	fclose($fh);
+}
+?>
