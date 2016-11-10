@@ -1,5 +1,6 @@
 <?php
 require_once("classes/WinkUtils.class.php");
+require_once("classes/LifxUtils.class.php");
 
 $config = array();
 $wink_devices = array();
