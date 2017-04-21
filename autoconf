@@ -1,9 +1,43 @@
 #!/usr/bin/env php
 <?php
+$include_dirs = array(get_include_path(), __DIR__, "/etc/akasha", "/usr/lib/akasha");
+set_include_path(implode(PATH_SEPARATOR, $include_dirs));
+
 require_once("classes/WinkUtils.class.php");
+@include_once("config.php");
 
 // You can set your user here:
 //$user = 'user@example.com';
+
+// If you want the JSON response for your devices
+// somewhere in a file, set this to true:
+$DUMP_JSON = true;
+
+// Get devices
+function get_devices($bearer)
+{
+	global $DUMP_JSON;
+
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, "https://api.wink.com/users/me/wink_devices");
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+	curl_setopt($ch, CURLOPT_HEADER, FALSE);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array("Authorization: Bearer " . $bearer));
+	$response = curl_exec($ch);
+	$ret_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	curl_close($ch);
+	if ($ret_code >= 400)
+		return false;
+
+	if ($DUMP_JSON && ($fh = fopen("devices.json", "w")))
+	{
+		fprintf($fh, $response);
+		fclose($fh);
+	}
+
+	$json = json_decode($response, true);
+	return $json;
+}
 
 // From https://dasprids.de/blog/2008/08/22/getting-a-password-hidden-from-stdin-with-php-cli/
 function get_password($stars = false)
@@ -47,62 +81,59 @@ function get_password($stars = false)
 	return $password;
 }
 
-
-
-if (!isset($user))
+@$access_token = $config["wink"]["token_access"];
+@$refresh_token = $config["wink"]["token_refresh"];
+if (!@$access_token || !($json = get_devices($access_token)))
 {
-	echo "Enter Wink user (mail such as user@example.com): ";
-	$user = trim(fgets(STDIN));
+	if (!isset($user))
+	{
+		echo "Enter Wink user (mail such as user@example.com): ";
+		$user = trim(fgets(STDIN));
+	}
+
+	echo "Enter Wink password for $user: ";
+	$pass = get_password(true);
+
+	$client_id = "quirky_wink_android_app";
+	$client_secret = "e749124ad386a5a35c0ab554a4f2c045";
+
+	// Get tokens
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, "https://api.wink.com/oauth2/token");
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+	curl_setopt($ch, CURLOPT_HEADER, FALSE);
+	curl_setopt($ch, CURLOPT_POST, TRUE);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, "{\n    \"client_id\": \"$client_id\",\n    \"client_secret\": \"$client_secret\",\n    \"username\": \"$user\",\n    \"password\": \"$pass\",\n    \"grant_type\": \"password\"\n}");
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
+	$response = curl_exec($ch);
+	$ret_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	curl_close($ch);
+	if ($ret_code >= 400)
+	{
+		echo "Wrong username/password." . PHP_EOL;
+		exit(1);
+	}
+	$json = json_decode($response, true);
+
+	$access_token = $json['data']['access_token'];
+	$refresh_token = $json['data']['refresh_token'];
+
+	if (!($json = get_devices($access_token)))
+	{
+		echo "Could not fetch a list of devices." . PHP_EOL;
+		exit(1);
+	}
 }
 
-echo "Enter Wink password for $user: ";
-$pass = get_password(true);
+$config_content  = '<?php' . PHP_EOL;
+$config_content .= 'require_once("devices/WinkUtils.class.php");' . PHP_EOL;
+$config_content .= PHP_EOL;
+$config_content .= '$config = array();' . PHP_EOL;
+$config_content .= '$config["wink"]["token_access"] =  "' . $access_token  . "\";" . PHP_EOL;
+$config_content .= '$config["wink"]["token_refresh"] = "' . $refresh_token . "\";" . PHP_EOL;
+$config_content .= PHP_EOL;
+$config_content .= '$wink_devices = array();' . PHP_EOL;
 
-
-$client_id = "quirky_wink_android_app";
-$client_secret = "e749124ad386a5a35c0ab554a4f2c045";
-
-// Get tokens
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, "https://api.wink.com/oauth2/token");
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-curl_setopt($ch, CURLOPT_HEADER, FALSE);
-curl_setopt($ch, CURLOPT_POST, TRUE);
-curl_setopt($ch, CURLOPT_POSTFIELDS, "{\n    \"client_id\": \"$client_id\",\n    \"client_secret\": \"$client_secret\",\n    \"username\": \"$user\",\n    \"password\": \"$pass\",\n    \"grant_type\": \"password\"\n}");
-curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
-$response = curl_exec($ch);
-curl_close($ch);
-$json = json_decode($response, true);
-
-$access_token = $json['data']['access_token'];
-$refresh_token = $json['data']['refresh_token'];
-
-$config  = '<?php' . PHP_EOL;
-$config .= 'require_once("devices/WinkUtils.class.php");' . PHP_EOL;
-$config .= PHP_EOL;
-$config .= '$config = array();' . PHP_EOL;
-$config .= '$config["wink"]["token_access"] =  "' . $access_token  . "\";" . PHP_EOL;
-$config .= '$config["wink"]["token_refresh"] = "' . $refresh_token . "\";" . PHP_EOL;
-$config .= PHP_EOL;
-$config .= '$wink_devices = array();' . PHP_EOL;
-
-// Get devices
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, "https://api.wink.com/users/me/wink_devices");
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-curl_setopt($ch, CURLOPT_HEADER, FALSE);
-curl_setopt($ch, CURLOPT_HTTPHEADER, array("Authorization: Bearer " . $access_token));
-$response = curl_exec($ch);
-curl_close($ch);
-$json = json_decode($response, true);
-
-if ($fh = fopen("devices.json", "w"))
-{
-	fprintf($fh, $response);
-	fclose($fh);
-}
-
-$config = "";
 foreach($json['data'] as $element)
 {
 	$model_name = @$element['model_name'];
@@ -133,18 +164,18 @@ foreach($json['data'] as $element)
 	if (array_key_exists($idfield, $element))
 	{
 		$id = $element[$idfield];
-		$config .= '$wink_devices[] = WinkUtils::new_device("' . $model_name . '", ' . $id .', "' . $name . '");' . PHP_EOL;
+		$config_content .= '$wink_devices[] = WinkUtils::new_device("' . $model_name . '", ' . $id .', "' . $name . '");' . PHP_EOL;
 	} else {
-		$config .= "//Unknown device type \"$model_name\", named \"$name\"" . PHP_EOL;
+		$config_content .= "//Unknown device type \"$model_name\", named \"$name\"" . PHP_EOL;
 	}
 }
 
-$config .= '?>' . PHP_EOL;
+$config_content .= '?>' . PHP_EOL;
 
-echo $config;
+echo $config_content;
 if ($fh = fopen("config-new.php", "w"))
 {
-	fprintf($fh, $config);
+	fprintf($fh, $config_content);
 	fclose($fh);
 }
 ?>
