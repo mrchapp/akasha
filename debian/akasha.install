@@ -1,0 +1,7 @@
+#!/usr/bin/dh-exec
+akasha /usr/bin
+config.sample.php /etc/akasha
+bash-completion-akasha.sh => /etc/bash_completion.d/akasha
+autoconf /usr/lib/akasha
+classes /usr/lib/akasha
+devices /usr/lib/akasha
