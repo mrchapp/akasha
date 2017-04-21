@@ -1,10 +1,9 @@
 # Akasha
-PHP command line application to control Wink and other devices for Home
-Automation.
+PHP command line application to control Wink, LiFX and other devices for
+Home Automation.
 
 # Prerequisites
 PHP 5.3 or later
-config.php (please contact developer for autoconf option)
 
 # Command Line Arguments
 ```
