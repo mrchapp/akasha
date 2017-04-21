@@ -64,7 +64,7 @@ $client_secret = "e749124ad386a5a35c0ab554a4f2c045";
 
 // Get tokens
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, "https://winkapi.quirky.com/oauth2/token");
+curl_setopt($ch, CURLOPT_URL, "https://api.wink.com/oauth2/token");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 curl_setopt($ch, CURLOPT_HEADER, FALSE);
 curl_setopt($ch, CURLOPT_POST, TRUE);
@@ -88,7 +88,7 @@ $config .= '$wink_devices = array();' . PHP_EOL;
 
 // Get devices
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, "https://winkapi.quirky.com/users/me/wink_devices");
+curl_setopt($ch, CURLOPT_URL, "https://api.wink.com/users/me/wink_devices");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 curl_setopt($ch, CURLOPT_HEADER, FALSE);
 curl_setopt($ch, CURLOPT_HTTPHEADER, array("Authorization: Bearer " . $access_token));

@@ -13,7 +13,7 @@ require_once("devices/generic_zwave_thermostat.class.php");
 
 class WinkUtils extends device
 {
-	static $URL = "https://winkapi.quirky.com";
+	static $URL = "https://api.wink.com/";
 
 	static function new_device($model_name, $id, $name)
 	{
