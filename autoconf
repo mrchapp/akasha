@@ -108,6 +108,7 @@ foreach($json['data'] as $element)
 	$model_name = @$element['model_name'];
 	$name = @$element['name'];
 	$has_parent = array_key_exists('parent_object_id', $element);
+	$upc_code = @$element['upc_code'];
 	$idfield = "";
 	$id = "";
 	$type = "";
@@ -116,6 +117,13 @@ foreach($json['data'] as $element)
 	{
 		// What's it doing at this level??
 		continue;
+	}
+
+	// Workaround: This thermostat does not have
+	// model_name.
+	if ($upc_code == 'generic_zwave_thermostat')
+	{
+		$model_name = $upc_code;
 	}
 
 	$tidf_arr = WinkUtils::get_info_from_model($model_name);
