@@ -138,6 +138,7 @@ foreach($json['data'] as $element)
 {
 	$model_name = @$element['model_name'];
 	$name = @$element['name'];
+	$name = str_replace(" ", "", $name);
 	$has_parent = array_key_exists('parent_object_id', $element);
 	$upc_code = @$element['upc_code'];
 	$idfield = "";
