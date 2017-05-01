@@ -79,13 +79,14 @@ class thermostat extends wink_device
 				$json_data = json_encode($data);
 				return WinkUtils::api_put($endpoint, $json_data);
 				break;
-			case "poweron":
+			case "poweroff":
 				$endpoint = "/thermostats/" . $this->id;
 
 				$data = array("desired_state" => array(
 					"powered" => false)
 				);
 
+				$json_data = json_encode($data);
 				return WinkUtils::api_put($endpoint, $json_data);
 				break;
 			default:
