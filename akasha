@@ -63,6 +63,7 @@ switch ($arg_token)
 		echo "Available devices:" . PHP_EOL;
 		list_devices(isset($wink_devices) ? $wink_devices : array());
 		list_devices(isset($lifx_devices) ? $lifx_devices : array());
+		list_devices(isset($cuby_devices) ? $cuby_devices : array());
 		exit(0);
 		break;
 }
@@ -98,6 +99,9 @@ if ($argv_size > 2)
 $found_device = find_device(isset($wink_devices) ? $wink_devices : array(), $recipient_device);
 if ($found_device == null)
 	$found_device = find_device(isset($lifx_devices) ? $lifx_devices : array(), $recipient_device);
+
+if ($found_device == null)
+	$found_device = find_device(isset($cuby_devices) ? $cuby_devices : array(), $recipient_device);
 
 if ($found_device)
 {
