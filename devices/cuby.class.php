@@ -36,16 +36,18 @@ class cuby extends device
 				$response = CubyUtils::api_data($data);
 				//echo "response=[$response]" . PHP_EOL;
 				$json = json_decode($response, true);
+
+				$ret = "ERR";
 				if (array_key_exists("data", $json))
 				{
 					$jdata = json_decode($json['data']);
 					$ftemp = $jdata[0]->temperature;
 					$ctemp = ($ftemp - 32) * 5 / 9;
 					//$rh = $jdata[0]->humidity;
-					$temp = sprintf("%.1f", $ctemp);
+					$ret = sprintf("%.1f", $ctemp);
 				}
 
-				echo $temp . PHP_EOL;
+				echo $ret . PHP_EOL;
 				break;
 			case "poweron":
 				$data = array();
