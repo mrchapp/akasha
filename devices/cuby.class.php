@@ -52,6 +52,8 @@ class cuby extends device
 			case "poweron":
 				$data = array();
 				$data["cubyid"] = $this->id;
+				$data["type"] = "power";
+				$data["power"] = "on";
 				// can be one of: "heat", "cool", "auto". "fan", "dry"
 				if ($args && array_key_exists("mode", $args))
 				{
