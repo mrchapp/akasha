@@ -126,7 +126,7 @@ if (!@$access_token || !($json = get_devices($access_token)))
 }
 
 $config_content  = '<?php' . PHP_EOL;
-$config_content .= 'require_once("devices/WinkUtils.class.php");' . PHP_EOL;
+$config_content .= 'require_once("classes/WinkUtils.class.php");' . PHP_EOL;
 $config_content .= PHP_EOL;
 $config_content .= '$config = array();' . PHP_EOL;
 $config_content .= '$config["wink"]["token_access"] =  "' . $access_token  . "\";" . PHP_EOL;
@@ -138,6 +138,7 @@ foreach($json['data'] as $element)
 {
 	$model_name = @$element['model_name'];
 	$name = @$element['name'];
+	$name = str_replace(" ", "", $name);
 	$has_parent = array_key_exists('parent_object_id', $element);
 	$upc_code = @$element['upc_code'];
 	$idfield = "";
