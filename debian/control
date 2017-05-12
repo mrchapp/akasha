@@ -1,12 +1,14 @@
 Source: akasha
-Section: unknown
+Section: misc
 Priority: optional
 Maintainer: Daniel Díaz <yosoy@danieldiaz.org>
-Build-Depends: debhelper (>= 9.0.0)
+Build-Depends: debhelper (>= 9.0.0), dh-exec
 Standards-Version: 3.9.5
 Homepage: https://github.com/mrchapp/akasha
 
 Package: akasha
 Architecture: all
-Depends: php5-cli, php5-curl, ca-certificates
-Description: Home Automation CLI application to control Wink, LiFX and other devices.
+Depends: php5-cli, php5-curl, ca-certificates, ${misc:Depends}
+Description: Home Automation CLI application to control Wink and other devices.
+ Akasha is able to control Wink, LiFX and Cuby devices through the
+ command line.
