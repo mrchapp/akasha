@@ -15,7 +15,7 @@ _AkashaComplete() {
     # CANDIDATES are the arguments
     device=${COMP_WORDS[1]}
     command=${COMP_WORDS[2]}
-    readarray -t CANDIDATES < <(akasha ${device} listcommands | cut -b3- | grep ^${command} | cut -d\  -f2- | tr -d '[]')
+    readarray -t CANDIDATES < <(akasha ${device} listcommands | cut -b3- | grep ^${command} | cut -d\  -f2- | tr -d '[]<>')
   fi
   COMPREPLY=($(compgen -W "$(echo ${CANDIDATES[@]})" -- $cur))
 
