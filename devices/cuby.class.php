@@ -40,10 +40,16 @@ class cuby extends device
 				if (array_key_exists("data", $json))
 				{
 					$jdata = json_decode($json['data']);
-					$ftemp = $jdata[0]->temperature;
-					$ctemp = ($ftemp - 32) * 5 / 9;
-					//$rh = $jdata[0]->humidity;
-					$ret = sprintf("%.1f", $ctemp);
+					foreach ($jdata as $cubydev)
+					{
+						if ($cubydev->id != $this->id)
+							continue;
+
+						$ftemp = $cubydev->temperature;
+						$ctemp = ($ftemp - 32) * 5 / 9;
+						//$rh = $cubydev->humidity;
+						$ret = sprintf("%.1f", $ctemp);
+					}
 				}
 
 				echo $ret . PHP_EOL;
